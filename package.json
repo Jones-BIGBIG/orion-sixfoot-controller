@@ -1,0 +1,25 @@
+{
+  "name": "orion-sixfoot-controller",
+  "version": "0.1.0",
+  "description": "Protocol spec and packet encoders for the Orion SixFoot Titan robot.",
+  "type": "module",
+  "private": false,
+  "bin": {
+    "orion-sixfoot": "./scripts/orion-sixfoot-cli.mjs"
+  },
+  "scripts": {
+    "protocol": "node ./scripts/orion-sixfoot-cli.mjs protocol",
+    "encode:demo": "node ./scripts/orion-sixfoot-cli.mjs encode-motion --power 99 --steer 0",
+    "decode:demo": "node ./scripts/orion-sixfoot-cli.mjs decode-motion --hex \"06 7A 00 63 00 00\"",
+    "build:capture-bundle": "node ./scripts/build_capture_bundle.mjs"
+  },
+  "keywords": [
+    "orion",
+    "sixfoot",
+    "titan",
+    "ble",
+    "robotics",
+    "reverse-engineering"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "orion-sixfoot-controller",
+  "version": "0.1.0",
+  "description": "Codex plugin for Orion SixFoot Titan BLE reverse-engineering artifacts, packet encoders, and live capture helpers.",
+  "author": {
+    "name": "Jones-BIGBIG",
+    "email": "jones-bigbig@users.noreply.github.com",
+    "url": "https://github.com/Jones-BIGBIG"
+  },
+  "homepage": "https://github.com/Jones-BIGBIG/orion-sixfoot-controller",
+  "repository": "https://github.com/Jones-BIGBIG/orion-sixfoot-controller",
+  "license": "MIT",
+  "keywords": [
+    "robotics",
+    "ble",
+    "reverse-engineering",
+    "unity",
+    "aiqi",
+    "orion",
+    "sixfoot"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Orion SixFoot Controller",
+    "shortDescription": "Encode and inspect Orion SixFoot Titan control packets",
+    "longDescription": "Provides a structured protocol spec, motion packet encoders, and live Frida capture helpers for the Mu Xing Li Ming Orion SixFoot Titan robot.",
+    "developerName": "Jones-BIGBIG",
+    "category": "Engineering",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Jones-BIGBIG/orion-sixfoot-controller",
+    "privacyPolicyURL": "https://github.com/Jones-BIGBIG/orion-sixfoot-controller/blob/main/README.md",
+    "termsOfServiceURL": "https://github.com/Jones-BIGBIG/orion-sixfoot-controller/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Encode a forward motion packet for Orion SixFoot Titan.",
+      "Show the BLE UUIDs and packet formats for SixFoot Titan.",
+      "Prepare a live Frida capture plan for the handshake cipher."
+    ],
+    "brandColor": "#0F766E",
+    "composerIcon": "./assets/composer-icon.png",
+    "logo": "./assets/logo.png",
+    "screenshots": []
+  }
+}

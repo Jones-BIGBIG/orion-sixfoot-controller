@@ -1,0 +1,162 @@
+{
+  "product": {
+    "appName": "木星黎明",
+    "packageName": "com.aiqi.robotwar",
+    "productCode": "SixFoot",
+    "displayName": "猎户座六足泰坦"
+  },
+  "ble": {
+    "topology": {
+      "peripherals": [
+        "powerMotor",
+        "steerMotor",
+        "stateLight"
+      ],
+      "notes": [
+        "SixFoot is a three-peripheral product in app logic, not a single BLE device."
+      ]
+    },
+    "uuids": {
+      "aiqi": {
+        "service": "6E400001-B5A3-F393-E0A9-E50E24DCCA9E",
+        "tx": "6E400002-B5A3-F393-E0A9-E50E24DCCA9E",
+        "rx": "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+      },
+      "meshProxy": {
+        "service": "00001828-0000-1000-8000-00805F9B34FB",
+        "tx": "00002ADD-0000-1000-8000-00805F9B34FB",
+        "rx": "00002ADE-0000-1000-8000-00805F9B34FB"
+      },
+      "ota": {
+        "ab1611": {
+          "service": "4169726F-6861-4446-5553-657276696365",
+          "tx": "4169726F-6861-4446-5543-6F6D6D616E64",
+          "rx": "4169726F-6861-4446-5543-6D6452657370"
+        },
+        "te8253": {
+          "service": "00010203-0405-0607-0809-0A0B0C0D1912",
+          "tx": "00010203-0405-0607-0809-0A0B0C0D2B12"
+        }
+      }
+    },
+    "mesh": {
+      "provisionerAddress": 28707,
+      "netKey": "AIQI_mesh_netkey",
+      "appKey": "AIQI_mesh_appkey",
+      "appKeyIndex": 291,
+      "vendorCompanyId": 148,
+      "vendorOpcodes": [
+        193,
+        194
+      ]
+    }
+  },
+  "packets": {
+    "motion": {
+      "channel": "aiqi",
+      "length": 6,
+      "fixedBytes": {
+        "0": 6,
+        "1": 122
+      },
+      "fields": [
+        {
+          "index": 0,
+          "name": "header",
+          "type": "u8",
+          "value": "0x06"
+        },
+        {
+          "index": 1,
+          "name": "opcode",
+          "type": "u8",
+          "value": "0x7A"
+        },
+        {
+          "index": 2,
+          "name": "power_hi",
+          "type": "i16-be-high"
+        },
+        {
+          "index": 3,
+          "name": "power_lo",
+          "type": "i16-be-low"
+        },
+        {
+          "index": 4,
+          "name": "steer_hi",
+          "type": "i16-be-high"
+        },
+        {
+          "index": 5,
+          "name": "steer_lo",
+          "type": "i16-be-low"
+        }
+      ],
+      "limits": {
+        "power": {
+          "min": -99,
+          "max": 99
+        },
+        "steer": {
+          "min": -99,
+          "max": 99
+        }
+      },
+      "examples": {
+        "forward99": "06 7A 00 63 00 00",
+        "backward99": "06 7A FF 9D 00 00",
+        "leftTurn99": "06 7A 00 00 00 63",
+        "rightTurn99": "06 7A 00 00 FF 9D",
+        "forwardLeft99": "06 7A 00 63 00 63"
+      },
+      "exchangeGroupDefault": [
+        0,
+        1
+      ]
+    },
+    "lightRgb": {
+      "channel": "aiqi",
+      "length": 11,
+      "knownDynamicBytes": {
+        "4": "stateLight.mesh.address low",
+        "5": "stateLight.mesh.address high",
+        "8": "red",
+        "9": "green",
+        "10": "blue"
+      },
+      "unknownFixedPrefix": true
+    },
+    "lightMode": {
+      "channel": "aiqi",
+      "length": 10,
+      "knownDynamicBytes": {
+        "4": "stateLight.mesh.address low",
+        "5": "stateLight.mesh.address high",
+        "8": "frequency + (flicker << 4)",
+        "9": "color"
+      },
+      "unknownFixedPrefix": true
+    }
+  },
+  "aiMapping": {
+    "moveForward": {
+      "call": "ControlMotor(+abs(num), 0)"
+    },
+    "moveBackward": {
+      "call": "ControlMotor(-abs(num), 0)"
+    },
+    "turnLeft": {
+      "call": "ControlMotor(0, +abs(num))"
+    },
+    "turnRight": {
+      "call": "ControlMotor(0, -abs(num))"
+    }
+  },
+  "dynamicRequirements": {
+    "handshakeCipher": true,
+    "xorAfterHandshake": true,
+    "runtimePeripheralAddresses": true,
+    "meshKeyFromRobot": true
+  }
+}

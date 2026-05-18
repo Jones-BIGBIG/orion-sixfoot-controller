@@ -40,6 +40,14 @@ function encodeMotion(power, steer) {
   return [0x06, 0x7a, ...int16ToBytes(p), ...int16ToBytes(s)];
 }
 
+function encodeSessionMotion(power, steer, cipher) {
+  const c = Number(cipher);
+  if (!Number.isInteger(c) || c < 0 || c > 255) {
+    throw new Error(`Invalid cipher byte: ${cipher}`);
+  }
+  return [...encodeMotion(power, steer), c];
+}
+
 function decodeMotion(bytes) {
   if (bytes.length !== 6) throw new Error("Motion frame must be exactly 6 bytes.");
   if (bytes[0] !== 0x06 || bytes[1] !== 0x7a) throw new Error("Not a known SixFoot motion frame.");
@@ -63,6 +71,7 @@ function usage() {
     "Usage:",
     "  orion-sixfoot protocol",
     "  orion-sixfoot encode-motion --power <int> --steer <int>",
+    "  orion-sixfoot encode-session-motion --power <int> --steer <int> --cipher <0-255>",
     "  orion-sixfoot decode-motion --hex \"06 7A 00 63 00 00\""
   ].join("\n");
 }
@@ -83,6 +92,27 @@ try {
             type: "motion",
             power: clamp(power),
             steer: clamp(steer),
+            bytes,
+            hex: hexify(bytes)
+          },
+          null,
+          2
+        ) + "\n"
+      );
+      break;
+    }
+    case "encode-session-motion": {
+      const power = readOption("--power");
+      const steer = readOption("--steer");
+      const cipher = readOption("--cipher");
+      const bytes = encodeSessionMotion(power, steer, cipher);
+      process.stdout.write(
+        JSON.stringify(
+          {
+            type: "session-motion",
+            power: clamp(power),
+            steer: clamp(steer),
+            cipher: Number(cipher),
             bytes,
             hex: hexify(bytes)
           },

@@ -19,11 +19,12 @@ What is fully extracted:
 - SixFoot three-peripheral topology
 - exact 6-byte motion packet layout
 - high-level AI move to motor-frame mapping
+- live-confirmed handshake sequence
+- live-confirmed post-handshake motion frame shape
+- confirmed movement on both motor nodes
 
 What is still dynamic and must be captured from a real robot session:
 
-- handshake-derived `cipher`
-- whether the final AIQI packet is XOR-obfuscated with that `cipher`
 - the fixed template prefix bytes used by the two light-control packet variants
 - runtime peripheral addresses and mesh keys returned by the robot
 
@@ -57,13 +58,24 @@ left turn 99 -> 06 7A 00 00 00 63
 right turn 99-> 06 7A 00 00 FF 9D
 ```
 
+Live debugging has now confirmed:
+
+```text
+00 52 -> 01 53 <cipher>
+00 56 -> 07 4E <7 serial bytes>
+01 46 <xor(sn)> <cipher> -> 01 47 01
+final motion = 06 7A <power_hi> <power_lo> <steer_hi> <steer_lo> <cipher>
+```
+
 ## CLI usage
 
 ```bash
 node ./scripts/orion-sixfoot-cli.mjs protocol
 node ./scripts/orion-sixfoot-cli.mjs encode-motion --power 99 --steer 0
+node ./scripts/orion-sixfoot-cli.mjs encode-session-motion --power 99 --steer 0 --cipher 15
 node ./scripts/orion-sixfoot-cli.mjs decode-motion --hex "06 7A 00 63 00 00"
 python3 ./scripts/encode_motion_packet.py --power 99 --steer 0
+python3 ./scripts/encode_motion_packet.py --power 99 --steer 0 --cipher 15
 ```
 
 ## Publish / install

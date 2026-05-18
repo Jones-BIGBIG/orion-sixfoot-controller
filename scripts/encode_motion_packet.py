@@ -22,22 +22,31 @@ def encode_motion(power: int, steer: int) -> List[int]:
     return [0x06, 0x7A, *int16_be(power), *int16_be(steer)]
 
 
+def encode_session_motion(power: int, steer: int, cipher: int) -> List[int]:
+    cipher = int(cipher)
+    if cipher < 0 or cipher > 255:
+        raise ValueError("cipher must be in range 0..255")
+    return [*encode_motion(power, steer), cipher]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Encode Orion SixFoot Titan motion packets.")
     parser.add_argument("--power", required=True, type=int)
     parser.add_argument("--steer", required=True, type=int)
+    parser.add_argument("--cipher", type=int)
     args = parser.parse_args()
 
     power = clamp(args.power)
     steer = clamp(args.steer)
-    packet = encode_motion(power, steer)
+    packet = encode_session_motion(power, steer, args.cipher) if args.cipher is not None else encode_motion(power, steer)
 
     print(
         json.dumps(
             {
-                "type": "motion",
+                "type": "session-motion" if args.cipher is not None else "motion",
                 "power": power,
                 "steer": steer,
+                **({"cipher": args.cipher} if args.cipher is not None else {}),
                 "bytes": packet,
                 "hex": " ".join(f"{b:02X}" for b in packet),
             },

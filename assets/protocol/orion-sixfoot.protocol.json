@@ -154,9 +154,76 @@
     }
   },
   "dynamicRequirements": {
-    "handshakeCipher": true,
-    "xorAfterHandshake": true,
+    "handshakeCipher": "partially_resolved",
+    "xorAfterHandshake": false,
     "runtimePeripheralAddresses": true,
     "meshKeyFromRobot": true
+  },
+  "liveFindings": {
+    "capturedFrom": "Two OneBot_XL_M motor nodes",
+    "verifiedQueryResponses": [
+      {
+        "request": "00 52",
+        "response": "01 53 <cipher>",
+        "interpretation": "cipher response, byte[2] is the session cipher"
+      },
+      {
+        "request": "00 56",
+        "response": "07 4E <7 serial bytes>",
+        "interpretation": "serial-number response, bytes[2..8] are serial bytes"
+      },
+      {
+        "request": "01 46 <xor(sn)> <cipher>",
+        "response": "01 47 01",
+        "interpretation": "handshake accepted"
+      }
+    ],
+    "derivedValues": {
+      "handshake2Template": "01 46 <xor(sn)> <cipher>",
+      "postHandshakeMotionTemplate": "06 7A <power_hi> <power_lo> <steer_hi> <steer_lo> <cipher>"
+    },
+    "liveWriteEvidence": {
+      "gattWriteSucceeded": true,
+      "notificationsReceivedForBareMotionFrame": false,
+      "robotMotionObserved": true
+    },
+    "nodeExamples": [
+      {
+        "node": "E5D783D9-01D3-E4DA-7785-B53EFD0DD112",
+        "cipher": 15,
+        "serialBytes": [
+          25,
+          12,
+          20,
+          0,
+          82,
+          98,
+          9
+        ],
+        "serialXor": 56,
+        "handshake2": "01 46 38 0F",
+        "forwardFrame": "06 7A 00 63 00 00 0F"
+      },
+      {
+        "node": "6CC69D00-B0A8-C599-80EA-F22728BB92F5",
+        "cipher": 0,
+        "serialBytes": [
+          25,
+          12,
+          20,
+          0,
+          76,
+          25,
+          4
+        ],
+        "serialXor": 80,
+        "handshake2": "01 46 50 00",
+        "forwardFrame": "06 7A 00 63 00 00 00"
+      }
+    ],
+    "behaviorConclusion": {
+      "bothMotorNodesAcceptedHandshake": true,
+      "bothMotorNodesMoved": true
+    }
   }
 }

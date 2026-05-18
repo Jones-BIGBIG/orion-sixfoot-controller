@@ -106,7 +106,7 @@ Length 10. Confirmed dynamic bytes:
 
 The fixed prefix bytes are not yet fully recovered from a live session.
 
-## Handshake / obfuscation
+## Handshake / session layer
 
 `BluetoothController` contains:
 
@@ -114,4 +114,111 @@ The fixed prefix bytes are not yet fully recovered from a live session.
 - `PeripheralState.cipher`
 - `PeripheralState.isHandshaked`
 
-So static analysis confirms a post-handshake packet transform exists on the AIQI path. The exact runtime value must still be captured during a real BLE session.
+Static plus live evidence now supports this model:
+
+### Step 1, get cipher
+
+Request:
+
+```text
+00 52
+```
+
+Observed live response shape:
+
+```text
+01 53 <cipher>
+```
+
+Interpretation:
+
+- response opcode `0x53`
+- cipher byte is `buffer[2]`
+
+### Step 2, get serial bytes
+
+Request:
+
+```text
+00 56
+```
+
+Observed live response shape:
+
+```text
+07 4E <7 serial bytes>
+```
+
+Interpretation:
+
+- response opcode `0x4E`
+- serial bytes are the 7 trailing bytes `buffer[2..8]`
+
+Computed:
+
+```text
+XOR(serial_bytes) = serial_xor
+```
+
+### Step 3, handshake completion packet
+
+Derived from the app's `Handshake` state machine:
+
+```text
+01 46 <xor(sn)> <cipher>
+```
+
+Meaning:
+
+- byte 2 is `XOR(sn)`
+- byte 3 is `cipher`
+
+Expected success response from static analysis:
+
+```text
+?? 47 01
+```
+
+### Outgoing motion after handshake
+
+`TrySendAIQIPacket` does not XOR the movement frame. Once `isHandshaked` is true, it appends the current `cipher` byte to the outgoing packet.
+
+So the final post-handshake motion frame shape is:
+
+```text
+06 7A <power_hi> <power_lo> <steer_hi> <steer_lo> <cipher>
+```
+
+## Live-confirmed node examples
+
+Node `E5D783D9-01D3-E4DA-7785-B53EFD0DD112`
+
+```text
+00 52 -> 01 53 0F
+00 56 -> 07 4E 19 0C 14 00 52 62 09
+XOR(sn) = 38
+01 46 38 0F -> 01 47 01
+forward = 06 7A 00 63 00 00 0F
+```
+
+Node `6CC69D00-B0A8-C599-80EA-F22728BB92F5`
+
+```text
+00 52 -> 01 53 00
+00 56 -> 07 4E 19 0C 14 00 4C 19 04
+XOR(sn) = 50
+01 46 50 00 -> 01 47 01
+forward = 06 7A 00 63 00 00 00
+```
+
+## Current conclusion
+
+The session layer is now confirmed:
+
+- query cipher
+- query serial
+- compute `XOR(sn)`
+- send second handshake packet
+- append cipher byte to the 6-byte motion frame
+
+This sequence now produces real robot movement on both motor nodes.

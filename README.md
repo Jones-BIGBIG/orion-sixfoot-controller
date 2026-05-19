@@ -33,6 +33,7 @@ What is still dynamic and must be captured from a real robot session:
 - [assets/protocol/orion-sixfoot.protocol.json](./assets/protocol/orion-sixfoot.protocol.json): structured protocol output
 - [docs/protocol.md](./docs/protocol.md): detailed reverse-engineering notes
 - [docs/live-capture.md](./docs/live-capture.md): next-step capture workflow
+- [docs/camera-eye.md](./docs/camera-eye.md): local camera sensing bridge
 - [scripts/orion-sixfoot-cli.mjs](./scripts/orion-sixfoot-cli.mjs): Node CLI
 - [scripts/encode_motion_packet.py](./scripts/encode_motion_packet.py): Python encoder
 - [scripts/live_capture_hook.js](./scripts/live_capture_hook.js): Frida hook payload

@@ -9,7 +9,9 @@
   },
   "scripts": {
     "protocol": "node ./scripts/orion-sixfoot-cli.mjs protocol",
+    "cameras": "node ./scripts/orion-sixfoot-cli.mjs list-cameras",
     "encode:demo": "node ./scripts/orion-sixfoot-cli.mjs encode-motion --power 99 --steer 0",
+    "encode:session-demo": "node ./scripts/orion-sixfoot-cli.mjs encode-session-motion --power 99 --steer 0 --cipher 15",
     "decode:demo": "node ./scripts/orion-sixfoot-cli.mjs decode-motion --hex \"06 7A 00 63 00 00\"",
     "build:capture-bundle": "node ./scripts/build_capture_bundle.mjs"
   },

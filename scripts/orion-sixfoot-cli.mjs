@@ -86,7 +86,7 @@ function readStringOption(name, fallback = null) {
 
 function captureFrame(cameraId, outPath, width, height) {
   requireFfmpeg();
-  const fps = 5;
+  const fps = 30;
   childProcess.execFileSync(
     "ffmpeg",
     [
@@ -100,6 +100,8 @@ function captureFrame(cameraId, outPath, width, height) {
       "-i",
       `${cameraId}:none`,
       "-frames:v",
+      "1",
+      "-update",
       "1",
       outPath
     ],
@@ -117,7 +119,7 @@ function watchMotion(cameraId, outDir, duration, fps, width, height, pixelThresh
   requireFfmpeg();
   fs.mkdirSync(outDir, { recursive: true });
   const rawPath = path.join(outDir, "capture.rgb");
-  const captureFps = Math.max(5, fps);
+  const captureFps = 30;
   const frameCount = Math.max(2, Math.round(duration * captureFps));
 
   childProcess.execFileSync(

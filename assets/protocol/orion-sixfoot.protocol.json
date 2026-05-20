@@ -223,7 +223,17 @@
     ],
     "behaviorConclusion": {
       "bothMotorNodesAcceptedHandshake": true,
-      "bothMotorNodesMoved": true
+      "bothMotorNodesMoved": true,
+      "roleInference": {
+        "driveNode": "E5D783D9-01D3-E4DA-7785-B53EFD0DD112",
+        "steerNode": "6CC69D00-B0A8-C599-80EA-F22728BB92F5",
+        "confidence": "medium",
+        "basis": [
+          "single-node power-only test produced the strongest camera motion delta on E5D7...",
+          "single-node steer-only tests did not produce large translation on either node",
+          "combined test using E5D7 forward plus 6CC steer still produced visible camera motion, consistent with 6CC being steering-side rather than primary drive"
+        ]
+      }
     }
   }
 }

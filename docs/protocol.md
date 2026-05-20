@@ -222,3 +222,18 @@ The session layer is now confirmed:
 - append cipher byte to the 6-byte motion frame
 
 This sequence now produces real robot movement on both motor nodes.
+
+## Current role inference
+
+Based on the camera-observed A/B tests:
+
+- `E5D783D9-01D3-E4DA-7785-B53EFD0DD112` is the current best candidate for the **drive / forward-backward** motor node.
+- `6CC69D00-B0A8-C599-80EA-F22728BB92F5` is the current best candidate for the **steering** motor node.
+
+Why this is the current conclusion:
+
+- power-only motion on `E5D7...` produced the strongest camera motion delta
+- steer-only motion on either node did not produce large whole-body translation
+- when `E5D7...` was driven forward and `6CC...` was given a steer command, the camera still observed physical movement, which is consistent with a drive + steering split
+
+This is good enough to operate with, but it is still marked **medium confidence** until a tighter, robot-centered camera angle confirms steering articulation directly.
